@@ -58,7 +58,7 @@ movie_matrix = movie_matrix = pd.read_csv(
     "movie_matrix.csv",
     index_col=0
 )
-ratings = pd.read_csv("ratings.csv")
+rating = pd.read_csv("ratings.csv")
 
 df = pd.merge(ratings, movies, on="movieId")
 
