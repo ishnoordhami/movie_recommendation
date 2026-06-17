@@ -1,6 +1,7 @@
 import streamlit as st
 import pickle
 import pandas as pd
+from sklearn.neighbors import NearestNeighbors
 
 # Page Configuration
 st.set_page_config(
@@ -53,8 +54,27 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # Load Files
-knn = pickle.load(open("knn_model.pkl", "rb"))
-movie_matrix = pickle.load(open("movie_matrix.pkl", "rb"))
+movie_matrix = movie_matrix = pd.read_csv(
+    "movie_matrix.csv",
+    index_col=0
+)
+ratings = pd.read_csv("ratings.csv")
+
+df = pd.merge(ratings, movies, on="movieId")
+
+movie_matrix = df.pivot_table(
+    index="title",
+    columns="userId",
+    values="rating"
+).fillna(0)
+
+knn = NearestNeighbors(
+    metric="cosine",
+    algorithm="brute",
+    n_neighbors=6
+)
+
+knn.fit(movie_matrix)
 
 # Title
 st.markdown('<p class="title">🎬 Movie Recommendation System</p>',
